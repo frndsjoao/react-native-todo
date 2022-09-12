@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react'
-import { Text, Box, Center, VStack, useColorModeValue, Fab, Icon } from 'native-base'
+import { VStack, useColorModeValue, Fab, Icon } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
-import ThemeToggle from '../components/theme-toogle'
 import TaskList from '../components/task-list'
 import shortid from 'shortid'
+import AnimatedColorBox from '../components/animated-color-box'
+import Masthead from '../components/masthead'
+import Navbar from '../components/navbar'
 
 const initialData = [
   { id: shortid.generate(), subject: 'Finish video', done: false },
@@ -15,7 +17,7 @@ export default function MainScreen() {
   const [data, setData] = useState(initialData)
   const [editingItemId, setEditingItemId] = useState<string | null>(null)
 
-  const handleToggleTaskItem = useCallback((item) => {
+  const handleToggleTaskItem = useCallback(item => {
     setData(previousData => {
       const newData = [...previousData]
       const index = previousData.indexOf(item)
@@ -63,12 +65,26 @@ export default function MainScreen() {
 
 
   return (
-    <Center
-      _dark={{ bg: 'trueGray.900' }}
-      _light={{ bg: 'trueGray.50' }}
+    <AnimatedColorBox
+      bg={useColorModeValue('trueGray.50', 'trueGray.900')}
       flex={1}
     >
-      <VStack space={5} alignItems="center" w="full">
+      <Masthead
+        title="What's up, Juones!"
+        image={require('../assets/masthead.png')}
+      >
+        <Navbar />
+      </Masthead>
+
+      <VStack
+        flex={1}
+        space={1}
+        mt="-20px"
+        borderTopLeftRadius="20px"
+        borderTopRightRadius="20px"
+        pt="20px"
+        bg={useColorModeValue('trueGray.50', 'trueGray.900')}
+      >
         <TaskList
           data={data}
           onToggleItem={handleToggleTaskItem}
@@ -78,7 +94,6 @@ export default function MainScreen() {
           onRemoveItem={handleRemoveItem}
           editingItemId={editingItemId}
         />
-        <ThemeToggle />
       </VStack>
       <Fab
         position="absolute"
@@ -88,6 +103,6 @@ export default function MainScreen() {
         bgColor="primary.700"
         onPress={handleAddNewItem}
       />
-    </Center>
+    </AnimatedColorBox>
   )
 }
